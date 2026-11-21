@@ -54,7 +54,7 @@ def add_bottom(
     p: KeyholeParams,
     *,
     BottomThickness: float = 0.0,
-    HoleType: Literal["simple", "countersink"] = "countersink",
+    HoleType: Literal["simple", "countersink"] | None = "countersink",
     HoleDiameter: float = 0.0,
     CounterSinkDiameter: float = 0.0,
     HoleLocation: Literal["center", "center-hole"] = "center-hole"
@@ -63,6 +63,9 @@ def add_bottom(
     bot = plane * RectangleRounded(p.Width, p.Length, p.Radius)
 
     part += extrude(bot, BottomThickness)
+
+    if HoleType is None or HoleDiameter <= 0:
+        return part
 
     if HoleLocation == "center-hole":
         pos = -(plane * p.HolePosition)

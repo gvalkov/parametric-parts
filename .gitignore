@@ -12,3 +12,4 @@ wheels/
 
 # Exported models
 *.stl
+*.3mf
