@@ -18,8 +18,8 @@ class KeyholeParams:
     Height: float  # Overall height
     Radius: float  # Outer radius
     WallThickness: float  # Outer wall thickness
-    TopThickness:  float 
-    HoleDiameter:  float 
+    TopThickness:  float
+    HoleDiameter:  float
     SlotWidth: float
     SlotLength: float
 
@@ -37,13 +37,13 @@ class KeyholeParams:
         self.HolePosition = Pos(0, (self.SlotLength / 2.0) - (self.HoleRadius), 0)
 
 
-def make_keyhole(p: KeyholeParams) -> Part:  
+def make_keyhole(p: KeyholeParams) -> Part:
     rect = RectangleRounded(p.Width, p.Length, p.Radius)
     wall = rect - offset(rect, -p.WallThickness)
-    
-    top = rect - SlotOverall(p.SlotLength, p.SlotWidth, 90) 
+
+    top = rect - SlotOverall(p.SlotLength, p.SlotWidth, 90)
     top -= p.HolePosition * Circle(p.HoleRadius)
-    
+
     part = extrude(top, p.TopThickness) + extrude(wall, p.Height)
     part.label = f"W={p.Width} L={p.Length} H={p.Height}"
     return part
@@ -51,8 +51,8 @@ def make_keyhole(p: KeyholeParams) -> Part:
 
 def add_bottom(
     part: Part,
-    p: KeyholeParams, 
-    *, 
+    p: KeyholeParams,
+    *,
     BottomThickness: float = 0.0,
     HoleType: Literal["simple", "countersink"] = "countersink",
     HoleDiameter: float = 0.0,
@@ -61,8 +61,8 @@ def add_bottom(
 ):
     plane = Plane(part.faces().sort_by().last)
     bot = plane * RectangleRounded(p.Width, p.Length, p.Radius)
-        
-    part += extrude(bot, BottomThickness) 
+
+    part += extrude(bot, BottomThickness)
 
     if HoleLocation == "center-hole":
         pos = -(plane * p.HolePosition)
@@ -103,19 +103,19 @@ def add_snaplock(
     # There must be an easier way to do this ...
     theta = math.radians(-45)
     a_sta = Vector(0, -Length/2.0)
-    a_end = Vector(Radius * cos(theta), Radius * sin(theta)) 
+    a_end = Vector(Radius * cos(theta), Radius * sin(theta))
     a_tan = Vector(-sin(theta), cos(theta)).normalized()
 
     theta = math.radians(45)
     b_sta = Vector(0, Length/2.0)
-    b_end = Vector(Radius * cos(theta), Radius * sin(theta)) 
+    b_end = Vector(Radius * cos(theta), Radius * sin(theta))
     b_tan = Vector(-sin(theta), cos(theta)).normalized()
-    
+
     a = TangentArc([a_end, a_sta], tangent=-a_tan)
     b = TangentArc([b_end, b_sta], tangent=b_tan)
-    
+
     f = Face(a + c.wire().trim(0.875, 1.0) + c.wire().trim(-1.0, 0.125) + b + Line([(0, -Length/2.0), (0, Length/2.0)]))
-    
+
     f = Pos(-p.SlotRadius, -p.SlotLength/2.0 + p.SlotRadius + Length / 2.0) * f
 
     lock = extrude(f, -p.TopThickness)

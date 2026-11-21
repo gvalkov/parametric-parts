@@ -19,7 +19,7 @@
 
 # %%
 from main import make_keyhole, make_key, add_bottom, add_snaplock, KeyholeParams
-from utils import show_svg, show_image
+from common.utils import show_svg, show_image
 from dataclasses import replace
 
 # %%

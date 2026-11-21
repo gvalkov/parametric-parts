@@ -1,8 +1,8 @@
 [project]
-name = "keyhole-inserts"
+name = "parametric-parts"
 version = "0.1.0"
 description = ""
-readme = ""
+readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "build123d>=0.11.1",
