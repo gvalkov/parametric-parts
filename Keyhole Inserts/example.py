@@ -13,7 +13,7 @@
 #     name: python3
 # ---
 
-# %%
+# %% tags=["readme-skip"]
 # %load_ext autoreload
 # %autoreload 2
 
@@ -22,7 +22,7 @@ from main import make_keyhole, make_key, add_bottom, add_snaplock, KeyholeParams
 from common.utils import show_svg, show_image
 from dataclasses import replace
 
-# %%
+# %% tags=["readme-skip"]
 from jupyter_cadquery import show, open_viewer, set_defaults, show_object, reset_show, Camera
 cv = open_viewer("Viewer", anchor="split-bottom", aspect_ratio=0)
 set_defaults(edge_accuracy=0.0001, axes=True, reset_camera=Camera.KEEP)

@@ -1,9 +1,23 @@
 """Helpers to show build123d parts in Jupyter."""
 
+import re
 from io import BytesIO
 
 from build123d import Compound, ExportSVG, LineType
-from IPython.display import HTML, Image, display
+from IPython.display import SVG, Image, display
+
+VIEWBOX_RE = re.compile(r'viewBox="([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)"')
+
+
+def add_white_background(svg):
+    """Add a white background so the drawing is visible in dark themes."""
+    match = VIEWBOX_RE.search(svg)
+    if match is None:
+        return svg
+
+    x, y, width, height = match.groups()
+    rect = f'<rect x="{x}" y="{y}" width="{width}" height="{height}" fill="white"/>'
+    return re.sub(r"(<svg\b[^>]*>)", lambda m: m.group(1) + rect, svg, count=1)
 
 
 def show_svg(part, viewport=(-50, -100, 150), wireframe=False):
@@ -26,11 +40,7 @@ def show_svg(part, viewport=(-50, -100, 150), wireframe=False):
     buffer = BytesIO()
     exporter.write(buffer)
     svg = buffer.getvalue().decode("utf8")
-    html = HTML(
-        '<div style="background-color: white; display: inline-block; '
-        f'padding: 30px;">{svg}</div>'
-    )
-    display(html)
+    display(SVG(add_white_background(svg)))
 
 
 def show_image(*args, **kwargs):
